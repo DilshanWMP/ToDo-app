@@ -23,7 +23,7 @@ pipeline {
 
             echo "Building Backend..."
             # CHANGE './backend' if your folder is named differently
-            docker build -t $BACKEND_IMAGE:latest ./backend
+            docker build -t $BACKEND_IMAGE:latest ./todoappbackend
             
             echo "Pushing Backend..."
             docker push $BACKEND_IMAGE:latest
@@ -41,7 +41,7 @@ pipeline {
 
             echo "Building Frontend..."
             # CHANGE './frontend' if your folder is named differently
-            docker build -t $FRONTEND_IMAGE:latest ./frontend
+            docker build -t $FRONTEND_IMAGE:latest ./todoappfrontend
             
             echo "Pushing Frontend..."
             docker push $FRONTEND_IMAGE:latest
