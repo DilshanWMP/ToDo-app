@@ -23,9 +23,11 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      await authAPI.signup(formData);
+      const response = await authAPI.signup(formData);
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
       alert('Account created successfully!');
-      window.location.href = '/login';
+      navigate('/dashboard');
     } catch (error) {
       alert(error.response?.data?.message || 'Signup failed');
       console.error('Signup error:', error);
