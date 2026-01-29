@@ -71,16 +71,13 @@ pipeline {
           sh '''
             echo "Deploying to $DEPLOY_SERVER_IP..."
             
-            # Disable host key checking to avoid interactive prompt
             mkdir -p ~/.ssh
             chmod 700 ~/.ssh
             echo "StrictHostKeyChecking no" > ~/.ssh/config
             
-            # Copy docker-compose.yml to the server
             scp docker-compose.yml ubuntu@$DEPLOY_SERVER_IP:/home/ubuntu/docker-compose.yml
             
-            # SSH into server and update containers
-            ssh ubuntu@$DEPLOY_SERVER_IP <<EOF
+            ssh ubuntu@$DEPLOY_SERVER_IP << 'EOF'
               export FRONTEND_IMAGE=$FRONTEND_IMAGE
               export BACKEND_IMAGE=$BACKEND_IMAGE
               

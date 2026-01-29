@@ -2,9 +2,7 @@ version: '3.8'
 
 services:
   frontend:
-    build:
-      context: ./todoappfrontend
-      dockerfile: Dockerfile
+    image: ${FRONTEND_IMAGE:-dilshanwmp/todo_app_frontend:latest}
     ports:
       - "5173:5173"
     depends_on:
@@ -13,13 +11,9 @@ services:
       - app-network
 
   backend:
-    build:
-      context: ./todoappbackend
-      dockerfile: Dockerfile
+    image: ${BACKEND_IMAGE:-dilshanwmp/todo_app_backend:latest}
     ports:
       - "5000:5000"
-    env_file:
-      - ./todoappbackend/.env
     environment:
       - MONGO_URI=mongodb://mongodb:27017/TodoApp
     depends_on:
