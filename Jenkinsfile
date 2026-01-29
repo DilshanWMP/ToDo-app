@@ -5,6 +5,7 @@ pipeline {
     DOCKER_HUB_USER = 'dilshanwmp'
     FRONTEND_IMAGE = 'dilshanwmp/todo_app_frontend'
     BACKEND_IMAGE = 'dilshanwmp/todo_app_backend'
+    DEPLOY_SERVER_IP = '54.91.126.198'
   }
 
   stages {
@@ -61,6 +62,33 @@ pipeline {
     stage('Cleanup') {
       steps {
         sh 'docker compose down'
+      }
+    }
+
+    stage('Deploy to EC2') {
+      steps {
+        sshagent(['ec2-server-key']) {
+          sh '''
+            echo "Deploying to $DEPLOY_SERVER_IP..."
+            
+            # Disable host key checking to avoid interactive prompt
+            mkdir -p ~/.ssh
+            chmod 700 ~/.ssh
+            echo "StrictHostKeyChecking no" > ~/.ssh/config
+            
+            # Copy docker-compose.yml to the server
+            scp docker-compose.yml ubuntu@$DEPLOY_SERVER_IP:/home/ubuntu/docker-compose.yml
+            
+            # SSH into server and update containers
+            ssh ubuntu@$DEPLOY_SERVER_IP <<EOF
+              export FRONTEND_IMAGE=$FRONTEND_IMAGE
+              export BACKEND_IMAGE=$BACKEND_IMAGE
+              
+              docker compose pull
+              docker compose up -d
+            EOF
+          '''
+        }
       }
     }
   }
