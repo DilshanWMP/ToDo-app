@@ -77,13 +77,10 @@ pipeline {
             
             scp docker-compose.yml ubuntu@$DEPLOY_SERVER_IP:/home/ubuntu/docker-compose.yml
             
-            ssh ubuntu@$DEPLOY_SERVER_IP << 'EOF'
-              export FRONTEND_IMAGE=$FRONTEND_IMAGE
-              export BACKEND_IMAGE=$BACKEND_IMAGE
-              
-              docker compose pull
-              docker compose up -d
-            EOF
+            # SSH into server and update containers
+            # We use a single string to avoid indentation issues with HEREDOC in Jenkins
+            ssh ubuntu@$DEPLOY_SERVER_IP "export FRONTEND_IMAGE=$FRONTEND_IMAGE; export BACKEND_IMAGE=$BACKEND_IMAGE; docker compose pull; docker compose up -d"
+
           '''
         }
       }
