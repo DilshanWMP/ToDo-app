@@ -87,7 +87,7 @@ pipeline {
             # SSH into server and update containers
             # Force remove mongodb to prevent conflicts
             # Inject dynamic URLs based on server IP
-            ssh ubuntu@$DEPLOY_SERVER_IP "export FRONTEND_IMAGE=$FRONTEND_IMAGE; export BACKEND_IMAGE=$BACKEND_IMAGE; export VITE_API_BASE_URL=http://$DEPLOY_SERVER_IP:5000/api; export FRONTEND_URL=http://$DEPLOY_SERVER_IP:5173; docker rm -f mongodb || true; docker compose pull; docker compose up -d"
+            ssh ubuntu@$DEPLOY_SERVER_IP "export FRONTEND_IMAGE=$FRONTEND_IMAGE; export BACKEND_IMAGE=$BACKEND_IMAGE; export VITE_API_BASE_URL=http://$DEPLOY_SERVER_IP:5000/api; export FRONTEND_URL=http://$DEPLOY_SERVER_IP:5173; export JWT_SECRET=12345678; docker rm -f mongodb || true; docker compose pull; docker compose up -d"
 
           '''
         }
