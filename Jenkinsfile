@@ -53,8 +53,7 @@ pipeline {
 
     stage('Test Run with Compose') {
       steps {
-        // Pre-cleanup: Kill ANY container using our ports (5000, 5173, 27017) to prevent "port already allocated"
-        // This is necessary if a previous run or a different project left containers running.
+        // Pre-cleanup: Kill ANY container using our ports (5000, 5173, 27017)
         sh 'docker ps -q --filter "publish=5000" | xargs -r docker rm -f'
         sh 'docker ps -q --filter "publish=5173" | xargs -r docker rm -f'
         sh 'docker ps -q --filter "publish=27017" | xargs -r docker rm -f'
@@ -65,10 +64,14 @@ pipeline {
         sh 'sleep 10' 
         sh 'docker ps'
       }
+      post {
+        always {
+          sh 'docker compose down || true'
+          sh 'docker rm -f mongodb || true'
+        }
+      }
     }
 
-    // Removed explicit Cleanup stage, moving to post { always }
-    
     stage('Deploy to EC2') {
       steps {
         sshagent(['ec2-server-key']) {
@@ -82,8 +85,8 @@ pipeline {
             scp docker-compose.yml ubuntu@$DEPLOY_SERVER_IP:/home/ubuntu/docker-compose.yml
             
             # SSH into server and update containers
-            # We use a single string to avoid indentation issues with HEREDOC in Jenkins
-            ssh ubuntu@$DEPLOY_SERVER_IP "export FRONTEND_IMAGE=$FRONTEND_IMAGE; export BACKEND_IMAGE=$BACKEND_IMAGE; docker compose pull; docker compose up -d"
+            # Force remove mongodb to prevent conflicts
+            ssh ubuntu@$DEPLOY_SERVER_IP "export FRONTEND_IMAGE=$FRONTEND_IMAGE; export BACKEND_IMAGE=$BACKEND_IMAGE; docker rm -f mongodb || true; docker compose pull; docker compose up -d"
 
           '''
         }
@@ -92,9 +95,6 @@ pipeline {
   }
 
   post {
-    always {
-      sh 'docker compose down || true'
-    }
     failure {
       echo '❌ Todo App Build Failed!'
     }
