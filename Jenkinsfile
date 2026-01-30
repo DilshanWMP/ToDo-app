@@ -54,6 +54,8 @@ pipeline {
     stage('Test Run with Compose') {
       steps {
         // Pre-cleanup to avoid "container name already in use" errors
+        // Force remove mongodb because it has a fixed container_name and might belong to a different workspace/project from a previous run
+        sh 'docker rm -f mongodb || true'
         sh 'docker compose down || true' 
         sh 'docker compose up -d'
         sh 'sleep 10' 
