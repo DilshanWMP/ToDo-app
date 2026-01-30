@@ -53,18 +53,16 @@ pipeline {
 
     stage('Test Run with Compose') {
       steps {
+        // Pre-cleanup to avoid "container name already in use" errors
+        sh 'docker compose down || true' 
         sh 'docker compose up -d'
         sh 'sleep 10' 
         sh 'docker ps'
       }
     }
 
-    stage('Cleanup') {
-      steps {
-        sh 'docker compose down'
-      }
-    }
-
+    // Removed explicit Cleanup stage, moving to post { always }
+    
     stage('Deploy to EC2') {
       steps {
         sshagent(['ec2-server-key']) {
@@ -88,6 +86,9 @@ pipeline {
   }
 
   post {
+    always {
+      sh 'docker compose down || true'
+    }
     failure {
       echo '❌ Todo App Build Failed!'
     }
