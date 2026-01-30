@@ -31,46 +31,51 @@ const Login = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100 px-4">
-        <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
-          <h2 className="text-3xl font-bold text-center text-green-800 mb-6">Welcome Back</h2>
-          
-          <form className="space-y-5" onSubmit={handleSubmit}>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Email</label>
-              <input 
+      <div className="min-h-screen flex items-center justify-center pt-20 px-4">
+        <div className="w-full max-w-md glass-panel rounded-2xl p-8 transform hover:scale-[1.01] transition-all duration-300">
+          <h2 className="text-3xl font-bold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-neon-cyan to-neon-green neon-text">
+            System Login
+          </h2>
+
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-neon-cyan ml-1">Email Coordinates</label>
+              <input
                 type="email"
                 name="email"
-                className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                className="w-full px-4 py-3 rounded-xl input-field"
+                placeholder="user@system.io"
                 value={formData.email}
                 onChange={handleChange}
                 required
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Password</label>
-              <input 
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-neon-cyan ml-1">Access Code</label>
+              <input
                 type="password"
                 name="password"
-                className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                className="w-full px-4 py-3 rounded-xl input-field"
+                placeholder="••••••••"
                 value={formData.password}
                 onChange={handleChange}
                 required
               />
             </div>
-            <button 
+
+            <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 transition-colors disabled:bg-gray-400"
+              className="w-full py-3 rounded-xl neon-button text-lg uppercase tracking-wider mt-4"
             >
-              {loading ? 'Signing In...' : 'Sign In'}
+              {loading ? 'Authenticating...' : 'Initialize Session'}
             </button>
           </form>
 
-          <div className="mt-6 text-center text-sm text-gray-600">
-            <Link to="#" className="text-green-700 hover:underline">Forgot password?</Link> 
-            <span className="mx-2">•</span> 
-            <Link to="/signup" className="text-green-700 hover:underline">Create account</Link>
+          <div className="mt-8 text-center text-sm text-gray-400">
+            <Link to="#" className="hover:text-neon-cyan transition-colors">Recover Access</Link>
+            <span className="mx-3 text-gray-600">|</span>
+            <Link to="/signup" className="hover:text-neon-cyan transition-colors">Create Identity</Link>
           </div>
         </div>
       </div>

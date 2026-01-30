@@ -1,5 +1,5 @@
 import Navbar from '../Components/Navbar';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { authAPI } from '../services/api.js';
 
@@ -10,6 +10,7 @@ const Signup = () => {
     password: ''
   });
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -26,7 +27,6 @@ const Signup = () => {
       const response = await authAPI.signup(formData);
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
-      alert('Account created successfully!');
       navigate('/dashboard');
     } catch (error) {
       alert(error.response?.data?.message || 'Signup failed');
@@ -39,58 +39,64 @@ const Signup = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-green-100 px-4">
-        <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
-          <h2 className="text-3xl font-bold text-center text-green-800 mb-6">Create Account</h2>
-          
-          <form className="space-y-5" onSubmit={handleSubmit}>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Name</label>
-              <input 
-                type="text" 
+      <div className="min-h-screen flex items-center justify-center pt-20 px-4">
+        <div className="w-full max-w-md glass-panel rounded-2xl p-8 transform hover:scale-[1.01] transition-all duration-300">
+          <h2 className="text-3xl font-bold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-neon-purple to-neon-cyan neon-text">
+            New Identity
+          </h2>
+
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-neon-purple ml-1">Designation (Name)</label>
+              <input
+                type="text"
                 name="name"
-                className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                className="w-full px-4 py-3 rounded-xl input-field"
+                placeholder="Agent 007"
                 value={formData.name}
                 onChange={handleChange}
                 required
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Email</label>
-              <input 
-                type="email" 
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-neon-purple ml-1">Comms (Email)</label>
+              <input
+                type="email"
                 name="email"
-                className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                className="w-full px-4 py-3 rounded-xl input-field"
+                placeholder="agent@system.io"
                 value={formData.email}
                 onChange={handleChange}
                 required
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Password</label>
-              <input 
-                type="password" 
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-neon-purple ml-1">Secret Key</label>
+              <input
+                type="password"
                 name="password"
-                className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+                className="w-full px-4 py-3 rounded-xl input-field"
+                placeholder="••••••••"
                 value={formData.password}
                 onChange={handleChange}
                 required
               />
             </div>
-            
-            <button 
-              type="submit" 
+
+            <button
+              type="submit"
               disabled={loading}
-              className="w-full py-2.5 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 transition-colors disabled:bg-gray-400"
+              className="w-full py-3 rounded-xl neon-button text-lg uppercase tracking-wider mt-4"
+              style={{ background: 'linear-gradient(45deg, #bd00ff, #00f3ff)' }}
             >
-              {loading ? 'Creating Account...' : 'Sign Up'}
+              {loading ? 'Initializing...' : 'Register Identity'}
             </button>
           </form>
 
-          <div className="mt-6 text-center text-sm text-gray-600">
-            Already have an account?{' '}
-            <Link to="/login" className="text-green-700 hover:underline">
-              Log in
+          <div className="mt-8 text-center text-sm text-gray-400">
+            Already registered?{' '}
+            <Link to="/login" className="text-neon-purple hover:underline">
+              Access System
             </Link>
           </div>
         </div>
