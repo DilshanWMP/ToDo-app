@@ -5,6 +5,8 @@ services:
     image: ${FRONTEND_IMAGE:-dilshanwmp/todo_app_frontend:latest}
     ports:
       - "5173:5173"
+    environment:
+      - VITE_API_BASE_URL=${VITE_API_BASE_URL}
     depends_on:
       - backend
     networks:
@@ -16,6 +18,7 @@ services:
       - "5000:5000"
     environment:
       - MONGO_URI=mongodb://mongodb:27017/TodoApp
+      - FRONTEND_URL=${FRONTEND_URL}
     depends_on:
       - mongodb
     networks:
