@@ -58,6 +58,14 @@ resource "aws_security_group" "web_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    description = "Jenkins"
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -98,6 +106,43 @@ resource "aws_instance" "app_server" {
 
               # Allow ubuntu user to run docker without sudo
               sudo usermod -aG docker ubuntu
+
+              # --- Install Java (Required for Jenkins) ---
+              sudo apt-get install -y fontconfig openjdk-17-jre
+
+              # --- Install Jenkins ---
+              # --- Install Jenkins ---
+              # (Fixing GPG Key Issue - Import the SPECIFIC missing key requested by apt)
+              sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 7198F4B714ABFC68
+              
+              # Use standard deb line WITHOUT signed-by restrictions so it sees the key above
+              echo "deb https://pkg.jenkins.io/debian-stable binary/" | sudo tee \
+                /etc/apt/sources.list.d/jenkins.list > /dev/null
+              
+              sudo apt-get update
+              sudo apt-get install -y jenkins
+
+              # --- Configure Memory Limits (1GB) ---
+              # Stop Jenkins to configure it
+              sudo systemctl stop jenkins
+              
+              # Set JAVA_OPTS in /etc/default/jenkins for memory limit
+              # Ensure we append or modify the existing JAVA_ARGS
+              echo 'JAVA_ARGS="-Djava.awt.headless=true -Xmx1024m -Xms512m"' | sudo tee -a /etc/default/jenkins
+              
+              # Also set JENKINS_JAVA_OPTIONS for newer systemd setups
+              mkdir -p /etc/systemd/system/jenkins.service.d/
+              echo '[Service]' | sudo tee /etc/systemd/system/jenkins.service.d/override.conf
+              echo 'Environment="JENKINS_JAVA_OPTIONS=-Djava.awt.headless=true -Xmx1024m -Xms512m"' | sudo tee -a /etc/systemd/system/jenkins.service.d/override.conf
+
+              sudo systemctl daemon-reload
+              sudo systemctl start jenkins
+              
+              # Start Jenkins and enable it on boot
+              sudo systemctl enable jenkins
+              
+              # Add jenkins user to docker group
+              sudo usermod -aG docker jenkins
               EOF
 
   tags = {

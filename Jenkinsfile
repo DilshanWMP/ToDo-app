@@ -5,7 +5,7 @@ pipeline {
     DOCKER_HUB_USER = 'dilshanwmp'
     FRONTEND_IMAGE = 'dilshanwmp/todo_app_frontend'
     BACKEND_IMAGE = 'dilshanwmp/todo_app_backend'
-    DEPLOY_SERVER_IP = '54.91.126.198'
+    DEPLOY_SERVER_IP = '54.160.157.188'
   }
 
   stages {
