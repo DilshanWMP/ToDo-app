@@ -53,8 +53,12 @@ pipeline {
 
     stage('Test Run with Compose') {
       steps {
-        // Pre-cleanup to avoid "container name already in use" errors
-        // Force remove mongodb because it has a fixed container_name and might belong to a different workspace/project from a previous run
+        // Pre-cleanup: Kill ANY container using our ports (5000, 5173, 27017) to prevent "port already allocated"
+        // This is necessary if a previous run or a different project left containers running.
+        sh 'docker ps -q --filter "publish=5000" | xargs -r docker rm -f'
+        sh 'docker ps -q --filter "publish=5173" | xargs -r docker rm -f'
+        sh 'docker ps -q --filter "publish=27017" | xargs -r docker rm -f'
+        
         sh 'docker rm -f mongodb || true'
         sh 'docker compose down || true' 
         sh 'docker compose up -d'
