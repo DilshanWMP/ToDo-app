@@ -83,7 +83,7 @@ const Dashboard = () => {
 
           {/* Header */}
           <div className="text-center mb-10">
-            <h1 className="text-5xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-neon-green via-neon-cyan to-neon-purple neon-text">
+            <h1 className="text-4xl md:text-5xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-neon-green via-neon-cyan to-neon-purple neon-text">
               Active Missions
             </h1>
             <p className="text-gray-400">Double-click a bubble to complete mission.</p>
@@ -91,19 +91,19 @@ const Dashboard = () => {
 
           {/* Add Todo Form */}
           <div className="glass-panel rounded-2xl p-4 mb-20 max-w-2xl mx-auto shadow-2xl">
-            <form onSubmit={handleCreateTodo} className="flex gap-4">
+            <form onSubmit={handleCreateTodo} className="flex flex-col md:flex-row gap-4">
               <input
                 type="text"
                 value={newTodo.title}
                 onChange={(e) => setNewTodo({ ...newTodo, title: e.target.value })}
-                className="flex-1 px-4 py-2 rounded-xl input-field bg-black/20"
+                className="flex-1 px-4 py-3 rounded-xl input-field bg-black/20"
                 placeholder="New Objective..."
                 required
               />
               <button
                 type="submit"
                 disabled={loading}
-                className="px-6 py-2 rounded-xl neon-button text-sm font-bold tracking-wider"
+                className="px-6 py-3 rounded-xl neon-button text-sm font-bold tracking-wider w-full md:w-auto"
               >
                 {loading ? '...' : 'LAUNCH'}
               </button>
