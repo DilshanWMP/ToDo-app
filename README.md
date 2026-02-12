@@ -120,3 +120,38 @@ sudo service jenkins start
 # Stop Jenkins
 sudo systemctl stop jenkins
 ```
+
+## 7. Troubleshooting
+
+### Jenkins "Failed to exec spawn helper" / Out of Memory
+If the Jenkins build fails with `Failed to exec spawn helper` or `Cannot run program "git"`, it means the server (t2.micro) is out of RAM.
+
+**Fix 1: Restart Jenkins (Temporary)**
+This frees up memory for a single run.
+```bash
+ssh -i "~/arisa.pem" ubuntu@54.160.157.188 "sudo systemctl restart jenkins"
+```
+
+**Fix 2: Add Swap Space (Permanent - Recommended)**
+Run these commands on the server to add 2GB of virtual memory (Swap).
+```bash
+# 1. SSH into server
+ssh -i "~/arisa.pem" ubuntu@54.160.157.188
+
+# 2. Run these commands one by one:
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+
+# 3. Restart Jenkins to be safe
+sudo systemctl restart jenkins
+```
+
+### SSH Connection Issues
+If you see `Warning: Identity file ... not accessible`:
+- Ensure you possess the `.pem` file.
+- Use the correct path. For example, if your key is `arisa.pem` in your home folder:
+  `ssh -i "~/arisa.pem" ubuntu@54.160.157.188`
+
