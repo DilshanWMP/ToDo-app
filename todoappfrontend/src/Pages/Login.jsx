@@ -34,7 +34,7 @@ const Login = () => {
       <div className="min-h-screen flex items-center justify-center pt-24 md:pt-32 px-4">
         <div className="w-full max-w-md glass-panel rounded-2xl p-8 transform hover:scale-[1.01] transition-all duration-300">
           <h2 className="text-3xl font-bold text-center mb-8 bg-clip-text text-transparent bg-gradient-to-r from-neon-cyan to-neon-green neon-text">
-            System Login
+            Login
           </h2>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
