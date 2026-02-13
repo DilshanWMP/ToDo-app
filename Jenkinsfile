@@ -82,7 +82,7 @@ pipeline {
             chmod 700 ~/.ssh
             echo "StrictHostKeyChecking no" > ~/.ssh/config
             
-            scp docker-compose.yml ubuntu@$DEPLOY_SERVER_IP:/home/ubuntu/docker-compose.yml
+            
             
             # SSH into server and update containers
             # Force remove mongodb to prevent conflicts
